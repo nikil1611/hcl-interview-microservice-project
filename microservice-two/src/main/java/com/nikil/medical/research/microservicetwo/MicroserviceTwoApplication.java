@@ -1,4 +1,4 @@
-package com.nikil.microservice.learning.microservicetwo;
+package com.nikil.medical.research.microservicetwo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
