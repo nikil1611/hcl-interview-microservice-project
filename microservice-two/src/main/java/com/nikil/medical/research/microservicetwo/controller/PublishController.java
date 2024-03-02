@@ -16,7 +16,7 @@ public class PublishController {
 	private JmsTemplate jmsTemplate;
 	
 	@PostMapping("/publishMessage")
-	public ResponseEntity<String> publishMessage(@RequestBody SystemMessage systemMessage){
+	public ResponseEntity<String> publishMessage(@RequestBody String systemMessage){
 		try {
 			jmsTemplate.convertAndSend("medical-research-queue",systemMessage);
 			return new ResponseEntity<>("Sent", HttpStatus.OK);

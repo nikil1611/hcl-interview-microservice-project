@@ -3,8 +3,10 @@ package com.nikil.medical.research.microserviceone.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import com.nikil.medical.research.microserviceone.dto.ResearchProgramDto;
 import com.nikil.medical.research.microserviceone.service.ResearchProgramService;
@@ -21,6 +24,9 @@ public class ResearchProgramController {
 
 	@Autowired 
 	ResearchProgramService researchProgramService;
+	
+	@Autowired 
+	private RestTemplate restTemplate;
 	
 	@PostMapping("/researchprogram")
 	public ResponseEntity<ResearchProgramDto> createResearchProgram(@RequestBody ResearchProgramDto researchProgramDto) {
@@ -62,6 +68,13 @@ public class ResearchProgramController {
 	public ResponseEntity<ResearchProgramDto> deleteResearchProgram( @PathVariable("id") int researchProgramId) {
 		try {
 			researchProgramService.delete(researchProgramId);
+			
+			HttpEntity<String> request = 
+				      new HttpEntity<String>("RECORD WITH ID =" +researchProgramId+ " DELETED");
+				    
+				    String personResultAsJsonStr = 
+				      restTemplate.postForObject("http://localhost:8081/publishMessage", request, String.class);
+				 
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		} catch (Exception e) {
 			return  new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
